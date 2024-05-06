@@ -15,7 +15,7 @@ base_file_path = inspect.getframeinfo(inspect.currentframe()).filename
 base_path = os.path.dirname(os.path.abspath(base_file_path))
 project_dir_path = os.path.dirname(os.path.abspath(base_path))
 classifiers_path = os.path.join(project_dir_path, 'classifiers')
-
+path='/kaggle/working'
 
 
 class classifierModel(Model):
@@ -51,11 +51,13 @@ class classifierModel(Model):
                     training_labels, training_predictions,
                     average='weighted')))
         # store the model into a file
-        classifiers_path='models/outputs/train'
+        # classifiers_path=os.path.join(project_dir_path, 'classifiers')
+        # classifiers_path='models/outputs/train'
         string=str(config['dm'])+str(config['hs'])+str(config['negative'])
-        filename = os.path.join(classifiers_path, 'output_' + string + '.pkl')
+        os.makedirs('/kaggle/working/train', exist_ok=True)
+        filename = os.path.join('/kaggle/working/train', 'output_' + string + '.pkl')
         with open(filename, 'wb') as file:
-            pickle.dump(self.model, file)
+            pickle.dump(training_predictions, file)
 
     def test_model(self, d2v, testing_vectors, testing_labels,config):
         logging.info("Classifier testing")
@@ -82,11 +84,13 @@ class classifierModel(Model):
                     testing_labels, testing_predictions,
                     average='weighted')))
         # store result into a file
-        classifiers_path='models/outputs/test'
+        # classifiers_path='models/outputs/test'
+        os.makedirs('/kaggle/working/test', exist_ok=True) 
         string=str(config['dm'])+str(config['hs'])+str(config['negative'])
-        filename = os.path.join(classifiers_path, 'output_' + string + '.pkl')
+        filename = os.path.join('/kaggle/working/test', 'output_' + string + '.pkl')
         with open(filename, 'wb') as file:
             pickle.dump(testing_predictions, file)
+            
         
 
     def predict(self, d2v, testing_vectors):

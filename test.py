@@ -1,10 +1,8 @@
 import pickle
 import os
-config={'dm':1,'hs':1,"negative":0}
-string=str(config['dm'])+str(config['hs'])+str(config['negative'])
+import inspect
+base_file_path = inspect.getframeinfo(inspect.currentframe()).filename
+base_path = os.path.dirname(os.path.abspath(base_file_path))
 classifiers_path='models/outputs/test'
-string=str(config['dm'])+str(config['hs'])+str(config['negative'])
-filename = os.path.join(classifiers_path, 'output_' + string + '.pkl')
-data = {'name': 'John', 'age': 30}
-with open(filename, 'wb') as file:
-    pickle.dump(data, file)
+new_path = os.path.join(base_path, classifiers_path)
+print(new_path)

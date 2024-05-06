@@ -4,7 +4,7 @@ import logging
 import random
 import os
 import inspect
-
+import pickle
 import numpy as np
 from gensim.models import doc2vec
 
@@ -20,7 +20,7 @@ base_file_path = inspect.getframeinfo(inspect.currentframe()).filename
 base_path = os.path.dirname(os.path.abspath(base_file_path))
 project_dir_path = os.path.dirname(os.path.abspath(base_path))
 classifiers_path = os.path.join(project_dir_path, 'classifiers')
-
+path='/kaggle/working'
 
 class doc2VecModel(Model):
 
@@ -30,6 +30,7 @@ class doc2VecModel(Model):
     def initialize_model(self, corpus,config):
         logging.info("Building Doc2Vec vocabulary")
         self.corpus = corpus
+        self.config=config
         self.model = doc2vec.Doc2Vec(min_count=5,
                                      # Ignores all words with
                                      # total frequency lower than this
@@ -68,6 +69,11 @@ class doc2VecModel(Model):
             self.model.alpha -= 0.0002
             # fix the learning rate, no decay
             self.model.min_alpha = self.model.alpha
+        #save
+        # string='d2lmodel_'+str(self.config['dm'])+str(self.config['hs'])+str(self.config['negative'])+'.pkl'
+        # os.makedirs(os.path.join(path,'model'), exist_ok=True)
+        # with open(os.path.join(path,'model',string), 'wb') as file:
+        #     pickle.dump(self.model, file)
 
     def get_vectors(self, corpus_size, vectors_size, vectors_type):
         """
